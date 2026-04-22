@@ -1,0 +1,17 @@
+/** Reset and base styles*/
+* {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+}
+
+body {
+ font-family: -apple-system, BlinkMacSystFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+ line-height: 1.5;
+ color: #333;
+ background-color: #f5f5f5;
+}
+
+#root {
+ width: 100%;
+}
