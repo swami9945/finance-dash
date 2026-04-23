@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import FinanceContext from '../context/FinanceContext';
 import { getTotalIncome, getTotalExpense, getBalance } from '../utils/calculations';
 
@@ -8,11 +8,17 @@ import { getTotalIncome, getTotalExpense, getBalance } from '../utils/calculatio
  */
 function Dashboard() {
   const { transactions } = useContext(FinanceContext);
+  const [animated, setAnimated] = useState(false);
 
   // Calculate values using utility functions
   const totalIncome = getTotalIncome(transactions);
   const totalExpense = getTotalExpense(transactions);
   const balance = getBalance(transactions);
+
+  // Trigger animation on mount
+  useEffect(() => {
+    setTimeout(() => setAnimated(true), 100);
+  }, []);
 
   /**
    * Format amount with currency symbol
@@ -24,40 +30,25 @@ function Dashboard() {
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Financial Summary</h2>
-      <div style={styles.summaryGrid}>
+    <div className="card">
+      <h2 style={{ marginTop: 0, marginBottom: '1.25rem', fontSize: '1.25rem' }}>Financial Summary</h2>
+      <div className="summary-grid">
         {/* Income Card */}
-        <div style={{ ...styles.card, ...styles.incomeCard }}>
-          <h3 style={styles.cardTitle}>Total Income</h3>
-          <p style={{ ...styles.cardAmount, color: '#4CAF50' }}>
-            {formatAmount(totalIncome)}
-          </p>
+        <div className={`summary-card income ${animated ? 'animate-slide-up' : ''}`} style={{ animationDelay: '0.1s' }}>
+          <h3>Total Income</h3>
+          <p className="amount">+{formatAmount(totalIncome)}</p>
         </div>
 
         {/* Expense Card */}
-        <div style={{ ...styles.card, ...styles.expenseCard }}>
-          <h3 style={styles.cardTitle}>Total Expense</h3>
-          <p style={{ ...styles.cardAmount, color: '#f44336' }}>
-            {formatAmount(totalExpense)}
-          </p>
+        <div className={`summary-card expense ${animated ? 'animate-slide-up' : ''}`} style={{ animationDelay: '0.2s' }}>
+          <h3>Total Expense</h3>
+          <p className="amount">-{formatAmount(totalExpense)}</p>
         </div>
 
         {/* Balance Card */}
-        <div
-          style={{
-            ...styles.card,
-            ...styles.balanceCard,
-            borderColor: balance >= 0 ? '#4CAF50' : '#f44336',
-          }}
-        >
-          <h3 style={styles.cardTitle}>Current Balance</h3>
-          <p
-            style={{
-              ...styles.cardAmount,
-              color: balance >= 0 ? '#4CAF50' : '#f44336',
-            }}
-          >
+        <div className={`summary-card balance ${animated ? 'animate-slide-up' : ''}`} style={{ animationDelay: '0.3s' }}>
+          <h3>Current Balance</h3>
+          <p className="amount" style={{ color: balance >= 0 ? 'var(--primary)' : 'var(--danger)' }}>
             {formatAmount(balance)}
           </p>
         </div>
@@ -65,54 +56,5 @@ function Dashboard() {
     </div>
   );
 }
-
-// Basic inline styles
-const styles = {
-  container: {
-    padding: '20px',
-    border: '1px solid #ddd',
-    borderRadius: '8px',
-    marginBottom: '20px',
-    backgroundColor: '#f9f9f9',
-  },
-  title: {
-    marginTop: 0,
-    marginBottom: '15px',
-    color: '#333',
-  },
-  summaryGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '15px',
-  },
-  card: {
-    padding: '20px',
-    borderRadius: '8px',
-    backgroundColor: '#fff',
-    border: '2px solid #eee',
-    textAlign: 'center',
-  },
-  incomeCard: {
-    borderLeft: '4px solid #4CAF50',
-  },
-  expenseCard: {
-    borderLeft: '4px solid #f44336',
-  },
-  balanceCard: {
-    borderLeft: '4px solid #2196F3',
-  },
-  cardTitle: {
-    margin: '0 0 10px 0',
-    fontSize: '14px',
-    color: '#666',
-    textTransform: 'uppercase',
-    letterSpacing: '1px',
-  },
-  cardAmount: {
-    margin: 0,
-    fontSize: '28px',
-    fontWeight: 'bold',
-  },
-};
 
 export default Dashboard;

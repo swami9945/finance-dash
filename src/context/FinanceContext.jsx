@@ -46,11 +46,22 @@ export function FinanceProvider({ children }) {
     setTransactions((prev) => prev.filter((t) => t.id !== id));
   };
 
+  /**
+   * Update an existing transaction
+   * @param {Object} updatedTransaction - The updated transaction object
+   */
+  const updateTransaction = (updatedTransaction) => {
+    setTransactions((prev) =>
+      prev.map((t) => (t.id === updatedTransaction.id ? updatedTransaction : t))
+    );
+  };
+
   // Provide the context value
   const value = {
     transactions,
     addTransaction,
     deleteTransaction,
+    updateTransaction,
   };
 
   return (
